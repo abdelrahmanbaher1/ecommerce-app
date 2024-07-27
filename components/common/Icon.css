@@ -1,0 +1,13 @@
+.icon {
+  width: 35px;
+  height: 25px;
+  border: 2px solid;
+}
+
+.icon-dark {
+  color: white;
+}
+
+.icon-light {
+  color: black;
+}
