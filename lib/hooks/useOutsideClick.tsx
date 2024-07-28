@@ -20,5 +20,5 @@ export const useOutsideClick = ({ callback, ref }: TProps) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [ref]);
+  }, [ref, callback]);
 };

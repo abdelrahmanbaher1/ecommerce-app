@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import { AppContextProvider } from "@/core/contexts/AppContext";
 import { TLocale, TNavDepartment } from "@/lib/types";
@@ -37,6 +38,7 @@ const LayoutClient = ({ navigationData, params, children }: TProps) => {
       <QueryClientProvider client={queryClient}>
         <Navbar navigationData={navigationData} />
         {children}
+        <Footer />
       </QueryClientProvider>
     </AppContextProvider>
   );

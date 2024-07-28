@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -21,8 +23,14 @@ const SelectFilter = ({
   placeholder = "",
   filterLabel = "",
 }: TProps) => {
+  const [val, setVal] = useState<string>("");
+
   return (
-    <Select>
+    <Select
+      onValueChange={(value) => {
+        setVal(value);
+      }}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

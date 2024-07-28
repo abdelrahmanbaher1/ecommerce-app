@@ -21,7 +21,7 @@ const ProductVariants = ({ onClick, variantSelected }: TProps) => {
               className={clsx(
                 "flex min-w-[48px] items-center justify-center rounded-full border md:min-w-[65px] bg-neutral-100 px-2 py-1 text-sm dark:border-neutral-800 dark:bg-neutral-900",
                 {
-                  "border-2 border-blue-600 ring-1 ring-transparent transition duration-300 ease-in-out hover:scale-110 hover:border-blue-600":
+                  "border-2 border-blue-600 dark:border-blue-300 ring-1 ring-transparent transition duration-300 ease-in-out hover:scale-110 hover:border-blue-600":
                     variant === variantSelected,
                 }
               )}

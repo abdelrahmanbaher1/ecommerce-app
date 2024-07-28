@@ -17,7 +17,6 @@ type TCategory = {
   creationAt: string;
   updatedAt: string;
 };
-type TVariant = "s" | "m" | "l" | "xl" | "2xl";
 type TProduct = {
   id: number;
   title: string;
@@ -31,6 +30,7 @@ type TProduct = {
 
 type TCartItem = TProduct & {
   quantity: number;
+  variant: string;
 };
 
 type TNavDepartment = Omit<TCategory, "creationAt" | "updatedAt">;

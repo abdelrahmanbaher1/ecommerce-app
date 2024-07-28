@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import Icon from "./common/Icon";
+import Icon from "./Icon";
 
 export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false);

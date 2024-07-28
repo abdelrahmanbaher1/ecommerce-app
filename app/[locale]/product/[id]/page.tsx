@@ -10,31 +10,19 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { getProductDetails } from "@/services/ProductService";
-import { Gallery } from "@/components/pdp/Gallery";
+import { Gallery } from "@/components/Product/Gallery";
 import RelatedProductsCarousel from "@/components/Modules/RelatedProductsCarousel";
 import { REACT_QUERY_KEYS } from "@/lib/helpers/constants";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { TCartItem, TProduct } from "@/lib/types";
+import { TProduct } from "@/lib/types";
 import clsx from "clsx";
-import useAppContext from "@/core/contexts/AppContext";
 import { useOutsideClick } from "@/lib/hooks/useOutsideClick";
 import Link from "next/link";
-import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@radix-ui/react-toast";
-import Skeleton from "@/components/common/Skeleton";
-import ProductPrice from "@/components/product/ProductPrice";
-import ProductVariants from "@/components/product/ProductVariants";
+import Skeleton from "@/components/common/Loaders/Skeleton";
+import ProductPrice from "@/components/Product/Common/ProductPrice";
+import ProductVariants from "@/components/Product/Common/ProductVariants";
+import AddToCartBtn from "@/components/common/AddToCartBtn";
 
 type TProps = {
   params: { id: string };
@@ -46,10 +34,8 @@ const page = ({ params }: TProps) => {
     queryFn: () => getProductDetails(+params.id),
   });
 
-  const { addToCart } = useAppContext();
   const [variantSelected, setVariantSelected] = useState<string | null>(null);
   const ref = useRef(null);
-  const { toast } = useToast();
   const handleVariantClick = (variant: string) => {
     setVariantSelected(variant);
   };
@@ -63,9 +49,16 @@ const page = ({ params }: TProps) => {
 
   if (isLoading)
     return (
-      <div className=" mx-auto max-w-screen-2xl px-4 mt-5">
-        <div className="h-lvh flex flex-col rounded-lg border border-neutral-200 bg-white p-8 md:p-12 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
-          <Skeleton fullWidth />
+      <div className="mx-auto max-w-screen-2xl px-4 mt-5">
+        <div className="w-full h-3/4 flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white p-8 md:p-12 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
+          <div className="w-full h-lvh flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white p-8 md:p-12 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
+            {new Array(2).fill(null).map((_, idx) => (
+              <React.Fragment key={idx}>
+                <Skeleton fullWidth />
+                <Skeleton renderTitleSkeleton fullWidth />
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -75,7 +68,7 @@ const page = ({ params }: TProps) => {
   const { category, description, title, images } = productDetail;
 
   const renderBreadCrumb = () => (
-    <Breadcrumb className="mb-5 ml-5">
+    <Breadcrumb className="mb-5 ml-5 mt-4">
       <BreadcrumbList className="text-xl">
         <BreadcrumbLink href="/">Home</BreadcrumbLink>
         <BreadcrumbSeparator />
@@ -101,7 +94,7 @@ const page = ({ params }: TProps) => {
         </p>
       </TabsContent>
       <TabsContent value="password">
-        <RelatedProductsCarousel categoryId={+category.id} />
+        <RelatedProductsCarousel categoryId={+category.id} mobileSize />
       </TabsContent>
     </Tabs>
   );
@@ -136,7 +129,7 @@ const page = ({ params }: TProps) => {
   );
 
   return (
-    <section aria-label="product details">
+    <section aria-label="product details" className="mb-10">
       {renderBreadCrumb()}
       <div className="mx-auto max-w-screen-2xl px-4">
         <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-8 md:p-12 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
@@ -157,21 +150,18 @@ const page = ({ params }: TProps) => {
                 onClick={handleVariantClick}
                 variantSelected={variantSelected}
               />
-              <Button
-                className={clsx("mt-4 w-full", {
+              <AddToCartBtn
+                btnClassName={clsx("mt-4 w-full", {
                   "cursor-not-allowed": !variantSelected,
                 })}
                 disabled={!variantSelected}
-                onClick={() => {
-                  addToCart(productDetail as TCartItem);
-                  toast({
-                    title: "Item Has Been Added Succesfully To The Cart ",
-                  });
+                product={{
+                  ...productDetail,
+                  quantity: 1,
+                  variant: variantSelected as string,
                 }}
                 ref={ref}
-              >
-                Add To Cart
-              </Button>
+              />
             </div>
 
             {renderTabs()}

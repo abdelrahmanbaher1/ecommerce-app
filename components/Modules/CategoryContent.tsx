@@ -13,7 +13,7 @@ const CategoryContent = ({ category }: TProps) => {
   const [isError, setIsError] = useState(false);
   const renderImage = () => (
     <img
-      className="rounded-full  transition-transform duration-300 ease-in-out transform hover:scale-110"
+      className="rounded-full max-w-[100px] max-h-[100px] md:max-w-[200px] md:max-h-[200px] transition-transform duration-300 ease-in-out transform hover:scale-110"
       src={image}
       alt={name}
       width={200}
@@ -21,7 +21,7 @@ const CategoryContent = ({ category }: TProps) => {
       onError={() => setIsError(true)}
     />
   );
-  if (isError) return null;
+  if (isError) return null; // this to not render anything if no Image Found
   return (
     <Link
       href={`/${locale}/category/${name}-${id}`}

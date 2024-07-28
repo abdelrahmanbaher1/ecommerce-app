@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useReducer } from "react";
 
 import { TCartItem, TLocale, TTheme } from "@/lib/types";
 import { getLocaleConfig } from "@/lib/helpers/locale";
@@ -27,9 +21,16 @@ type TContext = {
   addToCart: (product: TCartItem) => void;
   removeFromCart: (productId: number) => void;
   clearCart: () => void;
+  isMobile: boolean;
+  // @TODO : Add this later with filters
+  // minPrice: string;
+  // maxPrice: string;
+  // setMinPrice: (minPrice: string) => void;
+  // setMaxPrice: (maxPrice: string) => void;
 };
 
 const AppContext = React.createContext<TContext | null>(null);
+
 // Load cart items from localStorage
 const loadCartFromLocalStorage = (): TCartItem[] => {
   if (typeof window === "undefined") return []; // Prevent server-side rendering issues
@@ -37,39 +38,55 @@ const loadCartFromLocalStorage = (): TCartItem[] => {
   const storedCart = localStorage.getItem("cartItems");
   return storedCart ? JSON.parse(storedCart) : [];
 };
+
 // Save cart items to localStorage
 const saveCartToLocalStorage = (cartItems: TCartItem[]) => {
   localStorage.setItem("cartItems", JSON.stringify(cartItems));
 };
+
 type TAction =
   | { type: "ADD_TO_CART"; product: TCartItem }
   | { type: "REMOVE_FROM_CART"; productId: number }
   | { type: "CLEAR_CART" };
 
-const cartReducer = (state: TCartItem[], action: TAction): TCartItem[] => {
+type TState = {
+  cartItems: TCartItem[];
+};
+
+const initialState: TState = {
+  cartItems: loadCartFromLocalStorage(),
+};
+
+const cartReducer = (state: TState, action: TAction): TState => {
   switch (action.type) {
     case "ADD_TO_CART": {
-      const existingItemIndex = state.findIndex(
+      const existingItemIndex = state.cartItems.findIndex(
         (item) => item.id === action.product.id
       );
 
       if (existingItemIndex !== -1) {
-        const updatedItems = [...state];
+        const updatedItems = [...state.cartItems];
         updatedItems[existingItemIndex].quantity += 1;
-        return updatedItems;
+        return { ...state, cartItems: updatedItems };
       }
 
-      return [
+      return {
         ...state,
-        { ...action.product, quantity: 1, variant: action.product.variant },
-      ];
+        cartItems: [...state.cartItems, { ...action.product, quantity: 1 }],
+      };
     }
     case "REMOVE_FROM_CART": {
-      return state.filter((item) => item.id !== action.productId);
+      return {
+        ...state,
+        cartItems: state.cartItems.filter(
+          (item) => item.id !== action.productId
+        ),
+      };
     }
     case "CLEAR_CART": {
-      return [];
+      return { ...state, cartItems: [] };
     }
+
     default:
       return state;
   }
@@ -77,14 +94,14 @@ const cartReducer = (state: TCartItem[], action: TAction): TCartItem[] => {
 
 export const AppContextProvider = ({ children, locale, theme }: TProps) => {
   const localeConfig = useMemo(() => getLocaleConfig(locale), [locale]);
-  const [cartItems, dispatch] = useReducer(
-    cartReducer,
-    [],
-    loadCartFromLocalStorage
-  );
+
+  const [state, dispatch] = useReducer(cartReducer, initialState);
+
   useEffect(() => {
-    saveCartToLocalStorage(cartItems);
-  }, [cartItems]);
+    saveCartToLocalStorage(state.cartItems);
+  }, [state.cartItems]);
+
+  const { innerHeight: height, innerWidth: width } = global;
 
   const addToCart = useCallback(
     (product: TCartItem) => {
@@ -92,6 +109,7 @@ export const AppContextProvider = ({ children, locale, theme }: TProps) => {
     },
     [dispatch]
   );
+
   const removeFromCart = useCallback(
     (productId: number) => {
       dispatch({ type: "REMOVE_FROM_CART", productId });
@@ -109,9 +127,10 @@ export const AppContextProvider = ({ children, locale, theme }: TProps) => {
         locale,
         theme,
         ...localeConfig,
-        cartItems,
+        cartItems: state.cartItems,
         addToCart,
         removeFromCart,
+        isMobile: width < 800,
         clearCart,
       }}
     >

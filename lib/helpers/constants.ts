@@ -8,6 +8,26 @@ const REACT_QUERY_KEYS = {
 
 const LOCALES = ["en", "ar"];
 
-const PRODUCT_VARIANTS = ["s", "m", "l", "xl", "2xl"];
+const PRODUCT_VARIANTS = ["S", "M", "L", "XL", "2XL"];
 
-export { API_BASE_URL, REACT_QUERY_KEYS, PRODUCT_VARIANTS, LOCALES };
+enum ERRORVIEW {
+  GENERIC_ERROR = "generic",
+  EMPTY_CATEGORY = "Empty_Category",
+  EMPTY_CART = "Empty_Cart",
+  EMPTY_PRODUCT = "Empty_Product",
+}
+
+enum PRODUCT_BOX_VARIANT {
+  FULL = "full",
+  CAROUSEL = "carousel",
+  CART = "cart",
+}
+
+export {
+  API_BASE_URL,
+  REACT_QUERY_KEYS,
+  PRODUCT_VARIANTS,
+  LOCALES,
+  ERRORVIEW,
+  PRODUCT_BOX_VARIANT,
+};

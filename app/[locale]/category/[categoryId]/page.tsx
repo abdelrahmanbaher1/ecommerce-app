@@ -1,7 +1,6 @@
-"use client";
-
+import ErrorView from "@/components/common/ErrorView";
 import Filters from "@/components/common/Filters/Filters";
-import ProductBox from "@/components/productBox";
+import ProductBox from "@/components/Product/ProductBox/ProductBox";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,14 +9,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PRODUCT_BOX_VARIANT } from "@/lib/helpers/constants";
 
 import { getMaxAndMinPrice } from "@/lib/helpers/generic";
 import { TProduct } from "@/lib/types";
@@ -32,49 +32,73 @@ const page = async ({ params }: TProps) => {
   const [categoryName, category_id] = categoryId.split("-");
 
   const categoryProducts = await getCategoryProducts(+category_id);
+
   const [maxPrice, minPrice] = await getMaxAndMinPrice(categoryProducts);
+
+  if (categoryProducts.length === 0) return <ErrorView />;
+
+  const renderBreadCrumb = () => (
+    <Breadcrumb className="mt-5">
+      <BreadcrumbList className="text-2xl">
+        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>{categoryName}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
 
   return (
     <main className="p-5">
-      <Breadcrumb>
-        <BreadcrumbList className="text-2xl">
-          <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{categoryName}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
+      {renderBreadCrumb()}
       <section className="mt-2 flex gap-3">
-        <Card className="hidden md:flex flex-col md:w-1/4 h-auto p-2 bg-transparents">
+        {/* Filters Section */}
+        <Card className="hidden lg:flex flex-col md:w-1/4 h-auto p-2 bg-transparent">
+          <CardDescription className="text-center">
+            {" "}
+            @TODO : This is on progress{" "}
+          </CardDescription>
           <CardHeader>
             <CardTitle>Filters</CardTitle>
-            <CardDescription className="pl-2">Filter By</CardDescription>
           </CardHeader>
-
           <CardContent>
-            <p className="font-bold mb-1">Price - From</p>
-            <Filters
-              filterType="select"
-              placeholder="Select a Price"
-              filterLabel="Prices"
-              options={categoryProducts.map((product) => ({
-                id: product.id,
-                option: String(product.price),
-              }))}
-            />
-            {/* images=
-            {product.images.map((image: Image) => ({
-              src: image.url,
-              altText: image.altText,
-            }))} */}
+            <p className="text-sm font-bold mb-1 text-gray-700 text-center">
+              Min: {minPrice} --- Max :{maxPrice}
+            </p>
+            <div className="flex flex-col gap-4">
+              From
+              <Filters
+                filterType="select"
+                placeholder="Select a Price"
+                filterLabel="Prices"
+                options={categoryProducts.map((product) => ({
+                  id: product.id,
+                  option: String(product.price),
+                }))}
+              />
+              To
+              <Filters
+                filterType="select"
+                placeholder="Select a Price"
+                filterLabel="Prices"
+                options={categoryProducts.map((product) => ({
+                  id: product.id,
+                  option: String(product.price),
+                }))}
+              />
+              <Button>Apply Filters</Button>
+            </div>
           </CardContent>
         </Card>
+
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
           {categoryProducts.map((product: TProduct) => (
             <li key={product.id} className="w-full">
-              <ProductBox product={product} variant="full" />
+              <ProductBox
+                product={product}
+                variant={PRODUCT_BOX_VARIANT.FULL}
+              />
             </li>
           ))}
         </ul>

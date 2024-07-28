@@ -18,7 +18,6 @@ const CategoryCarouselModule = ({ categories, isLoading }: TProps) => {
         <div className={titleSkeleton} />
         <div className="grid gap-10 w-full grid-cols-3 md:grid-cols-5">
           {[...Array(5)].map((_, index) => (
-            // eslint-disable-next-line react/no-array-index-key
             <div
               className="flex flex-col gap-5 items-center"
               key={`Skeleton-${index}`}
@@ -34,9 +33,11 @@ const CategoryCarouselModule = ({ categories, isLoading }: TProps) => {
 
   return (
     <div className="flex flex-col gap-5 mb-10">
-      <h2 className="lg:text-3xl pl-4 sm:text-xl ">Explore Categories</h2>
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-5">
-        {categories.map((category) => (
+      <h2 className="text-xl text-center mt-2 sm:text-xl font-bold ">
+        Explore Categories
+      </h2>
+      <div className="grid grid-cols-3 lg:grid-cols-5 gap-5">
+        {categories.slice(0, 5).map((category) => (
           <CategoryContent category={category} key={category.id} />
         ))}
       </div>

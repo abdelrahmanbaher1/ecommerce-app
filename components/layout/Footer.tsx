@@ -1,4 +1,6 @@
-const Footer = (props: Props) => {
+"use client";
+
+const Footer = () => {
   const currentYear = new Date().getFullYear();
   const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : "");
   return (

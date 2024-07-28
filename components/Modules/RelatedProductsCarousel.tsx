@@ -1,37 +1,38 @@
 "use client";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { REACT_QUERY_KEYS } from "@/lib/helpers/constants";
+import { PRODUCT_BOX_VARIANT, REACT_QUERY_KEYS } from "@/lib/helpers/constants";
 import { getCategoryProducts } from "@/services/ProductService";
 import { useQuery } from "@tanstack/react-query";
-import ProductBox from "../productBox";
-import Skeleton from "../common/Skeleton";
+import ProductBox from "../Product/ProductBox/ProductBox";
+import Skeleton from "@/components/common/Loaders/Skeleton";
+import useAppContext from "@/core/contexts/AppContext";
+import React from "react";
 
 type TProps = {
   categoryId: number;
+  mobileSize?: boolean;
 };
 
-const RelatedProductsCarousel = ({ categoryId }: TProps) => {
+const RelatedProductsCarousel = ({
+  categoryId,
+  mobileSize = false,
+}: TProps) => {
   const { data: categoryProducts, isLoading } = useQuery({
     queryKey: [REACT_QUERY_KEYS.GET_ALL_PRODUCTS, categoryId],
     queryFn: () => getCategoryProducts(categoryId),
   });
-
-  const skeleton =
-    "w-32 h-40 sm:w-36 sm:h-48 md:w-40 md:h-52 animate-pulse bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center";
-  const titleSkeleton =
-    "w-20 h-4 sm:w-32 sm:h-5 md:w-40 md:h-6 animate-pulse rounded-full bg-neutral-200 dark:bg-neutral-700";
+  const { isMobile } = useAppContext();
+  const width = mobileSize ? "400px" : isMobile ? "400px" : "750px";
 
   if (isLoading) {
     return (
-      <div className="overflow-hidden px-3 md:h-full w-full flex flex-col">
-        <div className="grid gap-10 w-full grid-cols-3 md:grid-cols-5">
+      <div className="overflow-hidden md:h-full w-full flex flex-col">
+        <div className="flex gap-2 w-full grid-cols-3 md:grid-cols-5">
           {[...Array(3)].map((_, index) => (
-            <div
-              className="flex flex-col gap-5 items-center"
-              key={`Skeleton-${index}`}
-            >
-              <Skeleton />
+            <div className="flex flex-col gap-2" key={`Skeleton-${index}`}>
+              <Skeleton fullWidth={!isMobile} />
+              <Skeleton fullWidth={!isMobile} renderTitleSkeleton />
             </div>
           ))}
         </div>
@@ -41,23 +42,47 @@ const RelatedProductsCarousel = ({ categoryId }: TProps) => {
 
   if (!categoryProducts) return null;
   return (
-    <ScrollArea className="h-full w-full max-w-[500px] overflow-hidden">
-      <div className="flex w-max space-x-4 p-4">
-        {categoryProducts.map((product) => (
-          <figure key={product.id} className="shrink-0 w-32 sm:w-36 md:w-40">
-            <div className="overflow-hidden rounded-md">
-              <ProductBox product={product} variant="carousel" />
-              {/* <img
-                src={product.images[0]}
-                className="h-full w-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-110"
-                alt={product.title}
-              /> */}
-            </div>
-          </figure>
-        ))}
-      </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    <>
+      {isMobile ? (
+        <div className={` max-w-[${width}] pl-5 pr-5`}>
+          <h2 className="mb-4 text-2xl font-bold flex justify-between">
+            Related Products
+          </h2>
+          <ul className="flex overflow-hidden gap-3 overflow-x-scroll snap-proximity snap-x scrollbar-thin scrollbar-thumb-gray-400">
+            {categoryProducts.map((product) => (
+              <li className="snap-center">
+                <ProductBox
+                  product={product}
+                  variant={PRODUCT_BOX_VARIANT.FULL}
+                  key={product.id}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <ScrollArea
+          className={`h-full w-full max-w-[${width}]  overflow-hidden`}
+        >
+          <div className="flex w-max space-x-4 p-4">
+            {categoryProducts.map((product) => (
+              <figure
+                key={product.id}
+                className="shrink-0 w-32 sm:w-36 md:w-40"
+              >
+                <div className="overflow-hidden rounded-md">
+                  <ProductBox
+                    product={product}
+                    variant={PRODUCT_BOX_VARIANT.CAROUSEL}
+                  />
+                </div>
+              </figure>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      )}
+    </>
   );
 };
 
