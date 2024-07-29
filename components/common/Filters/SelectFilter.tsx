@@ -1,15 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TFilterOption } from "@/lib/types";
 
 type TProps = {
@@ -18,33 +9,20 @@ type TProps = {
   filterLabel?: string;
 };
 
-const SelectFilter = ({
-  options,
-  placeholder = "",
-  filterLabel = "",
-}: TProps) => {
-  const [val, setVal] = useState<string>("");
-
+const SelectFilter = ({ options }: TProps) => {
+  const optionsSorted = options.sort((a, b) => {
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+  });
   return (
-    <Select
-      onValueChange={(value) => {
-        setVal(value);
-      }}
-    >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent className="w-full">
-        <SelectGroup>
-          <SelectLabel>{filterLabel}</SelectLabel>
-          {options.map((option) => (
-            <SelectItem key={option.id} value={option.option}>
-              {option.option}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <select className="p-2 flex text-center pr-2">
+      {optionsSorted.map((option) => (
+        <option key={option.id} value={option.option}>
+          {option.option}
+        </option>
+      ))}
+    </select>
   );
 };
 

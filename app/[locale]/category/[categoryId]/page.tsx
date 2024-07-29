@@ -40,7 +40,9 @@ const page = async ({ params }: TProps) => {
   const renderBreadCrumb = () => (
     <Breadcrumb className="mt-5">
       <BreadcrumbList className="text-2xl">
-        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        <BreadcrumbLink href="/" key={Math.random()}>
+          Home
+        </BreadcrumbLink>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbPage>{categoryName}</BreadcrumbPage>
@@ -70,8 +72,6 @@ const page = async ({ params }: TProps) => {
               From
               <Filters
                 filterType="select"
-                placeholder="Select a Price"
-                filterLabel="Prices"
                 options={categoryProducts.map((product) => ({
                   id: product.id,
                   option: String(product.price),
@@ -80,8 +80,6 @@ const page = async ({ params }: TProps) => {
               To
               <Filters
                 filterType="select"
-                placeholder="Select a Price"
-                filterLabel="Prices"
                 options={categoryProducts.map((product) => ({
                   id: product.id,
                   option: String(product.price),

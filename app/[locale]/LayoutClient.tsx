@@ -2,14 +2,13 @@
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import { AppContextProvider } from "@/core/contexts/AppContext";
+import { AppContextProvider } from "@/contexts/AppContext";
 import { TLocale, TNavDepartment } from "@/lib/types";
 import {
   MutationCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { ThemeProvider } from "next-themes";
 import React from "react";
 
 type TProps = {
@@ -35,8 +34,8 @@ const LayoutClient = ({ navigationData, params, children }: TProps) => {
   });
   return (
     <AppContextProvider theme="light" locale={params.locale}>
+      <Navbar navigationData={navigationData} />
       <QueryClientProvider client={queryClient}>
-        <Navbar navigationData={navigationData} />
         {children}
         <Footer />
       </QueryClientProvider>

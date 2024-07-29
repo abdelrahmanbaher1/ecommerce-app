@@ -25,11 +25,11 @@ const ErrorView = ({
       <LogoIcon />
       <h3 className="text-2xl">{title}</h3>
       <span className="text-l text-gray-500">{subTitle}</span>
-      {showHomeButton && (
+      {/* {showHomeButton && (
         <Button className="w-1/4">
           <Link href="/">Go Home</Link>
         </Button>
-      )}
+      )} */}
       <>
         <h2 className="font-l font-bold">
           Or Take Another Look At Our Products

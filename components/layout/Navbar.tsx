@@ -1,8 +1,8 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { TNavDepartment } from "@/lib/types";
 import LogoIcon from "../common/Logo";
 import Link from "next/link";
-import useAppContext from "@/core/contexts/AppContext";
+import useAppContext from "@/contexts/AppContext";
 import ThemeSwitcher from "../common/ThemeSwitcher";
 import MobileNavBar from "./MobileNavBar";
 
@@ -25,13 +25,14 @@ const Navbar = ({ navigationData }: TProps) => {
       <Link
         href="/"
         className="max-sm:absolute max-sm:top-1/2 max-sm:left-1/2 max-sm:transform max-sm:-translate-x-1/2 max-sm:-translate-y-1/2"
+        aria-label="this is a homepage link"
       >
         <LogoIcon width="50" height="50" />
       </Link>
       <div className="flex gap-1.5 items-center sm:hidden">
         <ThemeSwitcher />
         <Cart />
-        {/* <LanguageSwitcher />  // @TODO : Add this Later */}
+        {/* <LanguageSwitcher /> // @TODO */}
       </div>
 
       <div className="hidden md:flex w-full items-center">

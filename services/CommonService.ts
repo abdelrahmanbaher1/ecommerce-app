@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/lib/helpers/constants";
+import { TNavDepartment } from "@/lib/types";
 import { headers } from "next/headers";
 
 export async function getNavigationData(

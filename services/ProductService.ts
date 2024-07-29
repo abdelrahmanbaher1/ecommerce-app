@@ -29,25 +29,27 @@ export async function getProductDetails(
   productId: number,
   customHeaders?: HeadersInit
 ): Promise<TProduct> {
-  // Change return type to TProduct
+  try {
+    const response = await fetch(`${API_BASE_URL}products/${productId}`, {
+      method: "GET",
+      headers: {
+        "x-guest": "error",
+        "Content-Type": "application/json",
+        ...customHeaders,
+      },
+    });
 
-  // Fetch product details from the API
-  const response = await fetch(`${API_BASE_URL}products/${productId}`, {
-    method: "GET",
-    headers: {
-      "x-guest": "error",
-      "Content-Type": "application/json",
-      ...customHeaders,
-    },
-  });
+    if (!response.ok) {
+      // Check if the response is OK
+      throw new Error(`Failed to fetch product details for ID: ${productId}`); // Throw an error if not
+    }
 
-  if (!response.ok) {
-    // Check if the response is OK
-    throw new Error(`Failed to fetch product details for ID: ${productId}`); // Throw an error if not
+    const data = await response.json();
+    return data as TProduct;
+  } catch (error) {
+    console.error("Error fetching category products:", error);
+    throw new Error("Failed to fetch category products");
   }
-
-  const data = await response.json();
-  return data as TProduct;
 }
 
 // Function to get products by category

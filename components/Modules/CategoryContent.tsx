@@ -1,4 +1,4 @@
-import useAppContext from "@/core/contexts/AppContext";
+import useAppContext from "@/contexts/AppContext";
 import { TCategory } from "@/lib/types";
 import Link from "next/link";
 import React, { useState } from "react";

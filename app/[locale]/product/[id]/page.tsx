@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getProductDetails } from "@/services/ProductService";
 import { Gallery } from "@/components/Product/Gallery";
 import RelatedProductsCarousel from "@/components/Modules/RelatedProductsCarousel";
-import { REACT_QUERY_KEYS } from "@/lib/helpers/constants";
+import { ERRORVIEW, REACT_QUERY_KEYS } from "@/lib/helpers/constants";
 import { useQuery } from "@tanstack/react-query";
 import { TProduct } from "@/lib/types";
 import clsx from "clsx";
@@ -22,14 +22,19 @@ import Link from "next/link";
 import Skeleton from "@/components/common/Loaders/Skeleton";
 import ProductPrice from "@/components/Product/Common/ProductPrice";
 import ProductVariants from "@/components/Product/Common/ProductVariants";
-import AddToCartBtn from "@/components/common/AddToCartBtn";
+import AddToCartBtn from "@/components/common/Buttons/AddToCartBtn";
+import ErrorView from "@/components/common/ErrorView";
 
 type TProps = {
   params: { id: string };
 };
 
 const page = ({ params }: TProps) => {
-  const { data: productDetail, isLoading } = useQuery<TProduct>({
+  const {
+    data: productDetail,
+    isLoading,
+    isError,
+  } = useQuery<TProduct>({
     queryKey: [REACT_QUERY_KEYS.GET_PRODDUCT_DETAILS, params.id],
     queryFn: () => getProductDetails(+params.id),
   });
@@ -63,6 +68,7 @@ const page = ({ params }: TProps) => {
       </div>
     );
 
+  if (isError) return <ErrorView type={ERRORVIEW.GENERIC_ERROR} />;
   if (!productDetail) return null;
 
   const { category, description, title, images } = productDetail;
@@ -86,15 +92,15 @@ const page = ({ params }: TProps) => {
     <Tabs defaultValue="Description">
       <TabsList className="dark:bg-white ">
         <TabsTrigger value="Description">Description</TabsTrigger>
-        <TabsTrigger value="password">Related Products</TabsTrigger>
+        <TabsTrigger value="relatedProducts">Related Products</TabsTrigger>
       </TabsList>
       <TabsContent value="Description" className="p-4">
         <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
           {description}
         </p>
       </TabsContent>
-      <TabsContent value="password">
-        <RelatedProductsCarousel categoryId={+category.id} mobileSize />
+      <TabsContent value="relatedProducts" className="max-w-[400px]">
+        <RelatedProductsCarousel categoryId={+category.id} fullSize />
       </TabsContent>
     </Tabs>
   );
