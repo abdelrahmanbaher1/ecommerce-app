@@ -58,4 +58,7 @@ const AddToCartBtn = forwardRef<HTMLButtonElement, TProps>(
   }
 );
 
+AddToCartBtn.displayName = "AddToCartBtn";
+
 export default React.memo(AddToCartBtn);
+

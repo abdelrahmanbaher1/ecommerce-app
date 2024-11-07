@@ -20,7 +20,7 @@ export default function ThemeSwitch() {
     if (!["light", "dark"].includes(resolvedTheme as string)) {
       setTheme("light");
     }
-  }, [resolvedTheme]);
+  }, [resolvedTheme, setTheme]);
 
   if (!mounted)
     return (

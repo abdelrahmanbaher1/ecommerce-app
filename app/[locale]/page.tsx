@@ -34,7 +34,7 @@ export default function Page() {
         Choose From Different Categories
       </h1>
       <Carousel
-        modules={categories as TCategory[]}
+        modules={(categories as TCategory[])?.slice(0, 5)}
         isLoading={isCategoriesLoading}
       />
       <motion.div

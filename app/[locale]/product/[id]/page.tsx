@@ -29,7 +29,7 @@ type TProps = {
   params: { id: string };
 };
 
-const page = ({ params }: TProps) => {
+const Page = ({ params }: TProps) => {
   const {
     data: productDetail,
     isLoading,
@@ -178,4 +178,4 @@ const page = ({ params }: TProps) => {
   );
 };
 
-export default page;
+export default Page;

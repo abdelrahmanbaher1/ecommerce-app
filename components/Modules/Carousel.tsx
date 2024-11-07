@@ -39,9 +39,8 @@ const Carousel = ({ modules, isLoading }: TProps) => {
     <Link
       href={`${locale}/category/${name}-${id}`}
       key={id}
-      className={`absolute top-0 left-0 w-full h-full transition-transform duration-700 ease-in-out ${
-        currentIndex === index ? "block" : "hidden"
-      }`}
+      className={`absolute top-0 left-0 w-full h-full transition-transform duration-700 ease-in-out ${currentIndex === index ? "block" : "hidden"
+        }`}
     >
       <img
         src={image}
@@ -92,9 +91,8 @@ const Carousel = ({ modules, isLoading }: TProps) => {
             <button
               key={index}
               type="button"
-              className={`w-3 h-3 rounded-full ${
-                currentIndex === index ? "bg-blue-600" : "bg-white"
-              }`}
+              className={`w-3 h-3 rounded-full ${currentIndex === index ? "bg-blue-600" : "bg-white"
+                }`}
               onClick={() => setCurrentIndex(index)}
               aria-label={`Slide ${index + 1}`}
             />

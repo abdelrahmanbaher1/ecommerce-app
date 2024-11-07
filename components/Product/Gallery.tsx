@@ -9,7 +9,13 @@ export function Gallery({
 }: {
   images: { src: string; altText: string }[];
 }) {
-  const reducer = (state: number, action: { type: string }) => {
+  // Define a union type for the actions to include the optional index.
+  type Action =
+    | { type: "INC" }
+    | { type: "DEC" }
+    | { type: "SET"; index: number };
+
+  const reducer = (state: number, action: Action) => {
     switch (action.type) {
       case "INC":
         return state < images.length - 1 ? state + 1 : state;
@@ -30,16 +36,15 @@ export function Gallery({
   return (
     <div className="flex flex-col-reverse lg:flex-row">
       {images.length > 1 ? (
-        <ul className="flex gap-5  items-center lg:flex-col space-y-2 p-2 overflow-y-auto h-full max-h-[800px]  scrollbar-thin scrollbar-thumb-gray-400">
+        <ul className="flex gap-5 items-center lg:flex-col space-y-2 p-2 overflow-y-auto h-full max-h-[800px] scrollbar-thin scrollbar-thumb-gray-400">
           {images.map((image, index) => {
             const isActive = index === currentIdx;
 
             return (
               <li
                 key={image.src}
-                className={`cursor-pointer border-2 ${
-                  isActive ? "border-blue-500" : "border-transparent"
-                } rounded overflow-hidden`}
+                className={`cursor-pointer border-2 ${isActive ? "border-blue-500" : "border-transparent"
+                  } rounded overflow-hidden`}
               >
                 <div
                   onClick={() => dispatch({ type: "SET", index })}
@@ -50,9 +55,8 @@ export function Gallery({
                     src={image.src}
                     width={100}
                     height={100}
-                    className={`object-cover ${
-                      isActive ? "opacity-100" : "opacity-50"
-                    } hover:opacity-100`}
+                    className={`object-cover ${isActive ? "opacity-100" : "opacity-50"
+                      } hover:opacity-100`}
                   />
                 </div>
               </li>
@@ -64,7 +68,7 @@ export function Gallery({
       <div className="relative flex-1 aspect-square h-full max-h-[850px]">
         {images[currentIdx] && (
           <Image
-            className="h-full w-full object-contain  transition-transform duration-300"
+            className="h-full w-full object-contain transition-transform duration-300"
             fill
             alt={images[currentIdx]?.altText as string}
             src={images[currentIdx]?.src as string}
