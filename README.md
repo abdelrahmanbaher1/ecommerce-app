@@ -1,5 +1,3 @@
-# Webook E-Commerce
-
 ## Introduction **📺**
 
 ### This is an E-Commerce Application built with `NextJs` with `user experience` and `solid architecture` in mind.
